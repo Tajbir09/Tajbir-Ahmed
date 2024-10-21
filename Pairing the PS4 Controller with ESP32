@@ -1,0 +1,43 @@
+#include <PS4Controller.h>
+
+// Callback function to handle when a PS4 controller connects
+void onConnect() {
+  Serial.println("Controller connected");
+}
+
+void setup() {
+  Serial.begin(115200);
+
+  // Initialize the PS4 controller
+  if (PS4.begin("xx:xx:xx:xx:xx:xx")) {  // Replace xx with the Bluetooth MAC address of the ESP32
+    Serial.println("PS4 controller ready to connect.");
+  } else {
+    Serial.println("PS4 controller failed to connect.");
+  }
+
+  PS4.attach(onConnect);
+}
+
+void loop() {
+  // Check if the controller is connected
+  if (PS4.isConnected()) {
+    if (PS4.getAnalogButton(L2)) {
+      Serial.println("L2 Button pressed");
+    }
+    if (PS4.getAnalogButton(R2)) {
+      Serial.println("R2 Button pressed");
+    }
+    
+    // Example to read joystick movements
+    int leftStickX = PS4.LStickX();
+    int leftStickY = PS4.LStickY();
+    
+    Serial.print("Left Stick X: ");
+    Serial.println(leftStickX);
+    
+    Serial.print("Left Stick Y: ");
+    Serial.println(leftStickY);
+    
+    delay(100);
+  }
+}
